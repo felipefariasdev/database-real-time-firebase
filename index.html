@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase APP de teste</title>
+</head>
+<body>
+    <h1>Real Time Database</h1>
+
+    <ul id="listarUsuarios"></ul>
+    <hr>
+    <form>
+        <input type="text" id="nome" placeholder="Nome">
+        <input type="number" id="idade" placeholder="Idade">
+        <button id="adicionar">Adicionar</button>
+    </form>
+
+    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyDKDZzWwhc2OYbxLwvNYOCmXktmYjftLtY",
+            authDomain: "appfelipefarias.firebaseapp.com",
+            databaseURL: "https://appfelipefarias.firebaseio.com",
+            projectId: "appfelipefarias",
+            storageBucket: "appfelipefarias.appspot.com",
+            messagingSenderId: "26124641430",
+            appId: "1:26124641430:web:d9af3488a033716c"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+
+        var listarUsuarios = document.getElementById('listarUsuarios');
+        var nome = document.getElementById('nome');
+        var idade = document.getElementById('idade');
+        var adicionar = document.getElementById('adicionar');
+        
+        // Ao clicar no botão
+        adicionar.addEventListener('click', function () {
+            add(nome.value, idade.value);
+        });
+        
+        // Função para criar um registro no Firebase
+        function add(nome, idade) {
+            var data = {
+                nome: nome,
+                idade: idade
+            };
+        
+            return firebase.database().ref().child('usuarios').push(data);
+        }
+        
+        firebase.database().ref('usuarios').on('value', function (snapshot) {
+            listarUsuarios.innerHTML = '';
+            snapshot.forEach(function (item) {
+                var li = document.createElement('li');
+                li.appendChild(document.createTextNode(item.val().nome + ': ' + item.val().idade));
+                listarUsuarios.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>
